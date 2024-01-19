@@ -190,13 +190,75 @@ Firstly we will begin with **CREATING A VIRTUAL HOST FOR YOUR WEBSITE USING APAC
 </VirtualHost>
 
 
-**To save and close the file, simply follow the steps below:**
+4. **To save and close the file, simply follow the steps below:**
 
-1. Hit the esc button on the keyboard
-2. Type:
-3. Type wq. w for write and q for quit
-4. Hit ENTER to save the file
+      1. Hit the esc button on the keyboard
+      2. Type:
+      3. Type wq. w for write and q for quit
+      4. Hit ENTER to save the file
 
-I used the **ls** command to show the new file in the sites-available directory
+5. **I used the ***ls*** command to show the new file in the sites-available directory**
 
-sudo ls /etc/apache2/sites-available
+      sudo ls /etc/apache2/sites-available
+
+      You will see something like this;
+      
+      000-default.conf default-ssl.conf  projectlamp.conf
+
+      use a2ensite command to enable the new virtual host:
+
+      sudo a2ensite projectlamp
+
+6. **To disable Apache’s default website use a2dissite command, type:**
+
+      sudo a2dissite 000-default
+
+
+      To ensure your configuration file is free of syntax errors, execute the following command:
+   
+      sudo apache2ctl configtest
+
+      Once confirmed, reload Apache to apply these changes:
+
+      sudo systemctl reload apache2
+
+**The newly established website is currently operational, yet the web root directory at /var/www/projectlamp remains empty. Generate an index.html file at this location to facilitate testing and ensure the virtual host     functions as intended using the command below**
+      
+      sudo echo 'Hello LAMP from hostname' $(curl -s http://169.254.169.254/latest/meta-data/public-hostname) 'with public IP' $(curl -s http://169.254.169.254/latest/meta-data/public-ipv4) >                                    /var/www/projectlamp/index.html
+      
+      Proceed to your web browser and attempt to access your website by entering the URL associated with the IP address:
+
+      http://<Public-IP-Address>:80
+
+   ## The sixth step to enable phpon the website
+
+      In Apache's default DirectoryIndex setup, index.html takes precedence over index.php. This is useful for creating temporary maintenance pages in PHP applications, where an informative index.html becomes the landing       page during maintenance. Once maintenance is complete, renaming or removing index.html restores the regular application page.
+     
+    1. To alter this behavior, edit the /etc/apache2/mods-enabled/dir.conf file and adjust the order of the index.php file within the DirectoryIndex directive.
+
+      sudo vim /etc/apache2/mods-enabled/dir.conf
+      
+      <IfModule mod_dir.c>
+              #Change this:
+              #DirectoryIndex index.html index.cgi index.pl index.php index.xhtml index.htm
+              #To this:
+              DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
+      </IfModule>
+
+      After saving and closing the file, Apache must be reloaded for the changes to take effect.
+
+      sudo systemctl reload apache2
+
+      2. Lastly, let's generate a PHP script to validate the correct installation and configuration of PHP on your server. With a designated location for your website's files and folders, we'll craft a PHP test scrip              to ensure Apache can adeptly handle and process requests for PHP files.
+
+      Create a new file named index.php inside your custom web root folder:
+      
+      vim /var/www/projectlamp/index.php
+
+      This will open a blank file. Add the following text, which is valid PHP code, inside the file:
+
+      <?php
+      
+      phpinfo();
+      
+      When you are finished, save and close the file, refresh the page and you will see a page similar to this:
