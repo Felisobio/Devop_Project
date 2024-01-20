@@ -249,7 +249,8 @@ Firstly we will begin with **CREATING A VIRTUAL HOST FOR YOUR WEBSITE USING APAC
 
       sudo systemctl reload apache2
 
-      2. Lastly, let's generate a PHP script to validate the correct installation and configuration of PHP on your server. With a designated location for your website's files and folders, we'll craft a PHP test scrip              to ensure Apache can adeptly handle and process requests for PHP files.
+      2. Lastly, let's generate a PHP script to validate the correct installation and configuration of PHP on your server. With a designated location for your website's          
+      files and folders, we'll craft a PHP test script to ensure Apache can adeptly handle and process requests for PHP files.
 
       Create a new file named index.php inside your custom web root folder:
       
@@ -262,3 +263,7 @@ Firstly we will begin with **CREATING A VIRTUAL HOST FOR YOUR WEBSITE USING APAC
       phpinfo();
       
       When you are finished, save and close the file, refresh the page and you will see a page similar to this:
+
+      After checking the relevant information about your PHP server through that page, it’s best to remove the file you created as it contains sensitive information about       your PHP environment -and your Ubuntu server. You can use rm to do so:
+
+      sudo rm /var/www/projectlamp/index.php
